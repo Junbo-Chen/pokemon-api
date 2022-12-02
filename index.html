@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- CSS only -->
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@5.2.2/dist/sketchy/bootstrap.css"> -->
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@5.2.2/dist/simplex/bootstrap.css"> -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@5.2.2/dist/superhero/bootstrap.css">
+    <title>Document</title>
+</head>
+<body>
+    <div class="container" style="width: 1000px;">
+        <h1>oefenen met API</h1>
+        <input type="text" name="" placeholder="search pokemon">
+        <button hidefocus="true">zoeken</button>
+        <h2>Name: <span class="pokemon-name">  </span></h2>
+        <img src="" alt="" id="font" >
+        <img src="" alt="" id="back">
+
+        <h2>move-name in cn: <span></span></h2>
+        <br>
+        <h2>move-name in jp: <span></span></h2>
+        <br>
+        <h2>move-name in en: <span></span></h2>
+        <br>
+        <h2>pokemon type: <span class="type1"></span> <span class="type2"></span></h2>
+    </div>
+
+    <script>
+        //
+        const input = document.querySelector('input');
+        const button = document.querySelector('button');
+
+        button.addEventListener('click', () => {
+            const value = input.value;
+            console.log(value);
+        fetch(`https://pokeapi.co/api/v2/pokemon/${value}`)
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                document.querySelector('.pokemon-name').innerText = data.name;
+                document.querySelector('#font').src = data.sprites.versions['generation-v']['black-white'].animated.front_default;
+                document.querySelector('#font').style.width = data.height * 20 +'px';
+                document.querySelector('#back').src = data.sprites.versions['generation-v']['black-white'].animated.back_default;
+                document.querySelector('#back').style.width = data.height * 20 +'px';
+                var randomNumber = Math.floor(Math.random() * data.moves.length);  
+                const move = data.moves[randomNumber].move.url;
+                console.log(move);
+                fetch(move)
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(data);
+                        document.querySelector('h2:nth-of-type(2) span').innerText = data.flavor_text_entries.find(item => item.language.name === 'zh-Hans').flavor_text;
+                        document.querySelector('h2:nth-of-type(3) span').innerText = data.flavor_text_entries.find(item => item.language.name === 'ja-Hrkt').flavor_text;
+                        document.querySelector('h2:nth-of-type(4) span').innerText = data.flavor_text_entries.find(item => item.language.name === 'en').flavor_text;
+                    })
+                //make type to icon
+                const type = data.types[0].type.name;
+                const type2 = data.types[1].type.name;
+                const getTypeImg = (type) => {
+                switch (type) {
+                    case "bug":
+                    return "https://upload.wikimedia.org/wikipedia/commons/3/3c/Pok%C3%A9mon_Bug_Type_Icon.svg";
+                    case "dark":
+                    return "https://upload.wikimedia.org/wikipedia/commons/0/09/Pok%C3%A9mon_Dark_Type_Icon.svg";
+                    case "ghost":
+                    return "https://upload.wikimedia.org/wikipedia/commons/a/a0/Pok%C3%A9mon_Ghost_Type_Icon.svg";
+                    case "grass":
+                    return "https://upload.wikimedia.org/wikipedia/commons/f/f6/Pok%C3%A9mon_Grass_Type_Icon.svg";
+                    case "dragon":
+                    return "https://upload.wikimedia.org/wikipedia/commons/a/a6/Pok%C3%A9mon_Dragon_Type_Icon.svg";
+                    case "electric":
+                    return "https://upload.wikimedia.org/wikipedia/commons/a/a9/Pok%C3%A9mon_Electric_Type_Icon.svg";
+                    case "fairy":
+                    return "https://upload.wikimedia.org/wikipedia/commons/0/08/Pok%C3%A9mon_Fairy_Type_Icon.svg";
+                    case "fighting":
+                    return "https://upload.wikimedia.org/wikipedia/commons/b/be/Pok%C3%A9mon_Fighting_Type_Icon.svg";
+                    case "fire":
+                    return "https://upload.wikimedia.org/wikipedia/commons/5/56/Pok%C3%A9mon_Fire_Type_Icon.svg";
+                    case "flying":
+                    return "https://upload.wikimedia.org/wikipedia/commons/e/e0/Pok%C3%A9mon_Flying_Type_Icon.svg";
+                    case "ground":
+                    return "https://upload.wikimedia.org/wikipedia/commons/8/8d/Pok%C3%A9mon_Ground_Type_Icon.svg";
+                    case "ice":
+                    return "https://upload.wikimedia.org/wikipedia/commons/8/88/Pok%C3%A9mon_Ice_Type_Icon.svg";
+                    case "normal":
+                    return "https://upload.wikimedia.org/wikipedia/commons/a/aa/Pok%C3%A9mon_Normal_Type_Icon.svg";
+                    case "poison":
+                    return "https://upload.wikimedia.org/wikipedia/commons/c/c4/Pok%C3%A9mon_Poison_Type_Icon.svg";
+                    case "psychic":
+                    return "https://upload.wikimedia.org/wikipedia/commons/a/ab/Pok%C3%A9mon_Psychic_Type_Icon.svg";
+                    case "rock":
+                    return "https://upload.wikimedia.org/wikipedia/commons/b/bb/Pok%C3%A9mon_Rock_Type_Icon.svg";
+                    case "steel":
+                    return "https://upload.wikimedia.org/wikipedia/commons/3/38/Pok%C3%A9mon_Steel_Type_Icon.svg";
+                    case "water":
+                    return "https://upload.wikimedia.org/wikipedia/commons/0/0b/Pok%C3%A9mon_Water_Type_Icon.svg";
+                    default:
+                    return "#";
+                }
+                };
+                const getTypeImg2 = (type2) => {
+                switch (type2) {
+                    case "bug":
+                    return "https://upload.wikimedia.org/wikipedia/commons/3/3c/Pok%C3%A9mon_Bug_Type_Icon.svg";
+                    case "dark":
+                    return "https://upload.wikimedia.org/wikipedia/commons/0/09/Pok%C3%A9mon_Dark_Type_Icon.svg";
+                    case "ghost":
+                    return "https://upload.wikimedia.org/wikipedia/commons/a/a0/Pok%C3%A9mon_Ghost_Type_Icon.svg";
+                    case "grass":
+                    return "https://upload.wikimedia.org/wikipedia/commons/f/f6/Pok%C3%A9mon_Grass_Type_Icon.svg";
+                    case "dragon":
+                    return "https://upload.wikimedia.org/wikipedia/commons/a/a6/Pok%C3%A9mon_Dragon_Type_Icon.svg";
+                    case "electric":
+                    return "https://upload.wikimedia.org/wikipedia/commons/a/a9/Pok%C3%A9mon_Electric_Type_Icon.svg";
+                    case "fairy":
+                    return "https://upload.wikimedia.org/wikipedia/commons/0/08/Pok%C3%A9mon_Fairy_Type_Icon.svg";
+                    case "fighting":
+                    return "https://upload.wikimedia.org/wikipedia/commons/b/be/Pok%C3%A9mon_Fighting_Type_Icon.svg";
+                    case "fire":
+                    return "https://upload.wikimedia.org/wikipedia/commons/5/56/Pok%C3%A9mon_Fire_Type_Icon.svg";
+                    case "flying":
+                    return "https://upload.wikimedia.org/wikipedia/commons/e/e0/Pok%C3%A9mon_Flying_Type_Icon.svg";
+                    case "ground":
+                    return "https://upload.wikimedia.org/wikipedia/commons/8/8d/Pok%C3%A9mon_Ground_Type_Icon.svg";
+                    case "ice":
+                    return "https://upload.wikimedia.org/wikipedia/commons/8/88/Pok%C3%A9mon_Ice_Type_Icon.svg";
+                    case "normal":
+                    return "https://upload.wikimedia.org/wikipedia/commons/a/aa/Pok%C3%A9mon_Normal_Type_Icon.svg";
+                    case "poison":
+                    return "https://upload.wikimedia.org/wikipedia/commons/c/c4/Pok%C3%A9mon_Poison_Type_Icon.svg";
+                    case "psychic":
+                    return "https://upload.wikimedia.org/wikipedia/commons/a/ab/Pok%C3%A9mon_Psychic_Type_Icon.svg";
+                    case "rock":
+                    return "https://upload.wikimedia.org/wikipedia/commons/b/bb/Pok%C3%A9mon_Rock_Type_Icon.svg";
+                    case "steel":
+                    return "https://upload.wikimedia.org/wikipedia/commons/3/38/Pok%C3%A9mon_Steel_Type_Icon.svg";
+                    case "water":
+                    return "https://upload.wikimedia.org/wikipedia/commons/0/0b/Pok%C3%A9mon_Water_Type_Icon.svg";
+                    default:
+                    return "#";
+                }
+                };
+
+                document.querySelector('.type').innerHTML = `<img src="${getTypeImg(type)}" alt="${type}" style="width: 50px;">`;
+                document.querySelector('.type2').innerHTML = `<img src="${getTypeImg2(type2)}" alt="${type2}" style="width: 50px;">`;
+            })
+        })
+    </script>
+</body>
+</html>
