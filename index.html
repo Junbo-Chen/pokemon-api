@@ -5,13 +5,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- CSS only -->
+    <link rel="stylesheet" href="css.css">
     <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@5.2.2/dist/sketchy/bootstrap.css"> -->
     <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@5.2.2/dist/simplex/bootstrap.css"> -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@5.2.2/dist/superhero/bootstrap.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@5.2.2/dist/minty/bootstrap.css">
     <title>Document</title>
 </head>
-<body>
-    <div class="container" style="width: 1000px;">
+<body style="background-color: rgb(255 241 242);">
+    <div class="container" style="width: 1500px; text-align: center;">
         <h1>oefenen met API</h1>
         <input type="text" name="" placeholder="search pokemon">
         <button hidefocus="true">zoeken</button>
@@ -19,13 +20,14 @@
         <img src="" alt="" id="font" >
         <img src="" alt="" id="back">
 
+        <h2>pokemon type: <span class="type"></span> </h2>
+
         <h2>move-name in cn: <span></span></h2>
         <br>
         <h2>move-name in jp: <span></span></h2>
         <br>
         <h2>move-name in en: <span></span></h2>
         <br>
-        <h2>pokemon type: <span></span> </h2>
     </div>
 
     <script>
@@ -52,9 +54,13 @@
                     .then(response => response.json())
                     .then(data => {
                         console.log(data);
-                        document.querySelector('h2:nth-of-type(2) span').innerText = data.flavor_text_entries.find(item => item.language.name === 'zh-Hans').flavor_text;
-                        document.querySelector('h2:nth-of-type(3) span').innerText = data.flavor_text_entries.find(item => item.language.name === 'ja-Hrkt').flavor_text;
-                        document.querySelector('h2:nth-of-type(4) span').innerText = data.flavor_text_entries.find(item => item.language.name === 'en').flavor_text;
+                        //remove \n
+                        const cn = data.flavor_text_entries.find(item => item.language.name === 'zh-Hans').flavor_text.replace(/\r\n/g, '').replace(/\n/g, '').replace(/\s+/g, '');
+                        const jp = data.flavor_text_entries.find(item => item.language.name === 'ja').flavor_text.replace(/\\n/g, '').replace(/\n/g, '').replace(/\s+/g, '');
+                        const en = data.flavor_text_entries.find(item => item.language.name === 'en').flavor_text.replace(/\\n/g, '').replace(/\n/g, '');
+                        document.querySelector('h2:nth-of-type(3) span').innerText = cn;
+                        document.querySelector('h2:nth-of-type(4) span').innerText = jp;
+                        document.querySelector('h2:nth-of-type(5) span').innerText = en;
                     })
                 //make type to icon
                 const type = data.types[0].type.name;
@@ -100,9 +106,11 @@
                     return "#";
                 }
                 };         
-                document.querySelector('h2:nth-of-type(5) span').innerHTML = `<img src="${getTypeImg(type)}" alt="${type}" style="width: 50px;">`;
+                document.querySelector('.type').innerHTML = `<img src="${getTypeImg(type)}" alt="${type}" style="width: 50px;">`;
             })
         })
     </script>
+    
 </body>
+
 </html>
